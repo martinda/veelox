@@ -1,5 +1,6 @@
 plugins {
     id 'antlr'
+    id 'groovy'
 }
 
 repositories {
@@ -8,4 +9,23 @@ repositories {
 
 dependencies {
     antlr 'org.antlr:antlr4:4.5.3'
+    compile 'net.sourceforge.argparse4j:argparse4j:0.7.0'
+    compile 'org.codehaus.groovy:groovy-all:2.4.7'
+    testCompile('org.spockframework:spock-core:1.0-groovy-2.4') {
+        exclude module: 'groovy-all'
+    }
+}
+
+generateGrammarSource {
+    arguments << "-lib" << "src/main/antlr/ca/martinda/veelox"
+    doLast {
+        println("${arguments}")
+    }
+}
+
+test {
+    // listen to events in the test execution lifecycle
+    beforeTest { descriptor ->
+       logger.lifecycle("Running test: " + descriptor)
+    }
 }
